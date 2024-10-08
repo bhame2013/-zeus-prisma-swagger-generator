@@ -1,0 +1,55 @@
+{
+  "name": "@zeus/prisma-swagger-generator",
+  "version": "0.0.1",
+  "description": "Generate zero-dependency Typescript interfaces from Prisma schema",
+  "author": "Tiago Maciel",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mogzol/prisma-generator-typescript-interfaces"
+  },
+  "type": "module",
+  "main": "generator.js",
+  "files": [
+    "generator.js"
+  ],
+  "bin": {
+    "prisma-generator-typescript-interfaces": "generator.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "postbuild": "node -e \"g='generator.js';f=require('fs');f.writeFileSync(g,'#!/usr/bin/env node\\n'+f.readFileSync(g))\"",
+    "clean": "rimraf --glob generator.js **/__TEST_TMP__",
+    "generate": "prisma generate --schema=prisma/example.prisma",
+    "lint": "prettier --check . && eslint . && echo 'Linting complete.'",
+    "lint:fix": "prettier --write . && eslint . --fix && echo 'Linting complete.'",
+    "test": "node --loader ts-node/esm test.ts",
+    "prepare": "node .husky/install.mjs"
+  },
+  "dependencies": {
+    "@nestjs/swagger": "^7.4.2",
+    "@prisma/generator-helper": "^5.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.9.1",
+    "@prisma/client": "^5.18.0",
+    "@types/eslint__js": "^8.42.3",
+    "eslint": "^9.9.1",
+    "eslint-config-prettier": "^9.1.0",
+    "husky": "^9.1.5",
+    "prettier": "^3.3.3",
+    "prisma": "^5.18.0",
+    "rimraf": "^6.0.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4",
+    "typescript-eslint": "^8.3.0"
+  },
+  "keywords": [
+    "prisma",
+    "generator",
+    "typescript",
+    "interface",
+    "json",
+    "dto"
+  ]
+}
