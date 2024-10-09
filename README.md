@@ -25,3 +25,15 @@ To use this generator, install the package:
 
 ```bash
 npm install --save-dev zeus-prisma-swagger-generator
+
+```typescript
+schema.prisma
+
+generator typeSwagger {
+  provider = "zeus-prisma-swagger-generator"
+  output   = "./types-swagger.ts"
+}
+```
+
+```bash
+npx prisma generate
