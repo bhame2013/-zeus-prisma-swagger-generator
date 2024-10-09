@@ -23,7 +23,7 @@ This generator eliminates external dependencies and creates standalone TypeScrip
 
 To use this generator, install the package:
 
-```bash
+````bash
 npm install --save-dev zeus-prisma-swagger-generator
 
 ```typescript
@@ -33,7 +33,8 @@ generator typeSwagger {
   provider = "zeus-prisma-swagger-generator"
   output   = "./types-swagger.ts"
 }
-```
+````
 
 ```bash
 npx prisma generate
+```

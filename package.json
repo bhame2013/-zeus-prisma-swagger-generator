@@ -1,6 +1,6 @@
 {
   "name": "zeus-prisma-swagger-generator",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Generate zero-dependency Typescript interfaces from Prisma schema",
   "author": "Tiago Maciel",
   "license": "MIT",
@@ -23,7 +23,8 @@
     "generate": "prisma generate --schema=prisma/example.prisma",
     "lint": "prettier --check . && eslint . && echo 'Linting complete.'",
     "lint:fix": "prettier --write . && eslint . --fix && echo 'Linting complete.'",
-    "test": "node --loader ts-node/esm test.ts"
+    "test": "node --loader ts-node/esm test.ts",
+    "prepare": "node .husky/install.mjs"
   },
   "dependencies": {
     "@prisma/generator-helper": "^5.0.0"
