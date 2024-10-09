@@ -14,7 +14,7 @@ interface Config {
   typePrefix: string;
   typeSuffix: string;
   headerComment: string;
-  modelType: "class"; // Modificado para 'class'
+  modelType: "class";
   enumType: "stringUnion" | "enum" | "object";
   dateType: "Date" | "string" | "number";
   bigIntType: "bigint" | "string" | "number";
@@ -50,7 +50,6 @@ const CUSTOM_TYPES = {
 function validateConfig(config: Config) {
   const errors: string[] = [];
   if (config.modelType !== "class") {
-    // Validar se é 'class'
     errors.push(`Invalid modelType: ${config.modelType}`);
   }
   if (!["stringUnion", "enum", "object"].includes(config.enumType)) {
@@ -216,17 +215,33 @@ generatorHandler({
     const modelsTs = [...models, ...types].map((m, index) =>
       getModelTs(config, m, modelNameMap, enumNameMap, typeNameMap, usedCustomTypes, index === 0),
     );
-    const customTypesTs = Array.from(usedCustomTypes)
-      .map((t) => CUSTOM_TYPES[t])
-      .filter(Boolean);
-    const header = config.headerComment ? `// ${config.headerComment}\n\n` : "";
-    const outputContent = `${header}${enumsTs.join("\n\n")}\n\n${customTypesTs.join("\n")}\n\n${modelsTs.join("\n\n")}`;
+    const customTypesTs = Array.from(usedCustomTypes).map((t) => CUSTOM_TYPES[t]);
 
-    const outputDir = options.generator.output!.value;
+    let ts = [...enumsTs, ...modelsTs, ...customTypesTs].join("\n\n") + "\n";
 
-    if (outputDir) {
-      await mkdir(dirname(outputDir), { recursive: true });
-      await writeFile(outputDir, outputContent);
+    if (config.headerComment) {
+      const headerContent = config.headerComment
+        .split("\n")
+        .map((line) => `// ${line}`)
+        .join("\n");
+      ts = `${headerContent}\n\n${ts}`;
     }
+
+    if (config.prettier) {
+      // Prettier is imported inside this if so that it's not a required dependency
+      let prettier: typeof import("prettier");
+      try {
+        prettier = await import("prettier");
+      } catch {
+        throw new Error("Unable import Prettier. Is it installed?");
+      }
+
+      ts = await prettier.format(ts, { parser: "typescript" });
+    }
+
+    const outputFile = options.generator.output?.value as string;
+    const outputDir = dirname(outputFile);
+    await mkdir(outputDir, { recursive: true });
+    await writeFile(outputFile, ts);
   },
 });
